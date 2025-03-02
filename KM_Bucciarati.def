@@ -1,0 +1,33 @@
+[Info]
+Name         = "KM_Bucciarati"
+DisplayName  = "KM_Bucciarati"
+VersionDate  = 04,14,2002
+MugenVersion = 1.1
+Author       = "JJJ"
+Pal.Defaults = 1,2,3,4,5,6,7,8,9,10,11,12
+
+[Files]
+Cmd     = KM_Bucciarati.cmd
+Cns     = KM_Bucciarati.cns
+St      = KM_Bucciarati.cns
+St1     = -2state.cns
+StCommon = common1.cns
+Sprite  = KM_Bucciarati.sff
+Anim    = KM_Bucciarati.air
+Sound   = KM_Bucciarati.snd
+
+pal1    = act/moody.act
+pal2    = act/day.act
+pal3    = act/zeppelin.act
+pal4    = act/snake.act
+pal5    = act/floyd.act
+pal6    = act/sabbath.act
+pal7    = act/mellow.act
+pal8    = act/sugar.act
+pal9    = act/deep.act
+pal10   = act/snake.act
+pal11   = act/floyd.act
+pal12   = act/sabbath.act
+
+;-----------------------------------------------------------------------------
+
