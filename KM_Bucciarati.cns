@@ -7,7 +7,7 @@
 ; Var(6)  = x
 ; Var(7)  = y
 ; Var(8)  = アサルトフラグ
-; Var(9)  = 壁バウンドフラグ
+; Var(9)  = 幹部ジラーレフラグ
 ;
 ; Var(10) = 敗北演出設定
 ; Var(11) = 勝利演出
@@ -181,6 +181,12 @@ anim = 40
 ctrl = 0
 sprpriority = 1
 
+[State 12, 1]
+type = ChangeState
+trigger1=(AILevel)
+value = 0
+ctrl = 1
+
 [State 40, HitBy]
 type = HitBy
 trigger1 = 1
@@ -201,11 +207,58 @@ type = VarSet
 trigger1 = command = "holdback"
 sysvar(1) = -1
 
+[State 40, 4]
+type = VelSet
+trigger1 = AnimTime = 0
+x = ifelse(sysvar(1)=0, const(velocity.jump.neu.x), ifelse(sysvar(1)=1, const(velocity.jump.fwd.x), const(velocity.jump.back.x)))
+y = const(velocity.jump.y)
+
+[State 40, 5]
+type = VelSet
+trigger1 = AnimTime = 0
+trigger1 = prevstateno = 100 ;RUN_FWD
+trigger1 = sysvar(1) = 1
+x = const(velocity.runjump.fwd.x)
+
+[State 40, 6]
+type = ChangeState
+trigger1 = AnimTime = 0
+value = 50
+ctrl = 1
+
+;---------------------------------------------------------------------------
+; Jump Start(AI)
+[Statedef 41]
+type    = S
+physics = S
+anim = 40
+ctrl = 0
+sprpriority = 1
+
+[State 40, HitBy]
+type = HitBy
+trigger1 = 1
+value = SCA, NA,SA,HA,NP,SP,HP
+
+[State 40, 1]
+type = VarSet
+trigger1 = Time = 0
+sysvar(1) = 0
+
 [State 40, 2]
 type = VarSet
-trigger1 = AILevel
-trigger1 = p2movetype = H
+trigger1 = var(58) = -625
+sysvar(1) = IFElse(p2bodydist x > 105 || random%2=0, 1, 0-(!random%2))
+
+[State 40, 2]
+type = VarSet
+trigger1 = var(58) = -626
 sysvar(1) = 1
+
+[State 40, 2]
+type = VarSet
+trigger1 = var(58) = -2200
+sysvar(1) = IfElse(p2bodydist x > 50, 1, IfElse(p2bodydist x < 30, -1, 0))
 
 [State 40, 4]
 type = VelSet
@@ -308,6 +361,7 @@ type    = S
 physics = S
 anim = 100
 sprpriority = 1
+ctrl = (AILevel)
 
 [State 100, 1]
 type = VelSet
@@ -333,8 +387,16 @@ channel = 0
 
 [State 100, 4]
 type = ChangeAnim
+triggerall = !AILevel
 trigger1 = anim != 101
 trigger1 = command != "holdfwd"
+value = 101
+
+[State 100, 4]
+type = ChangeAnim
+triggerall = AILevel
+trigger1 = anim != 101
+trigger1 = time > 60
 value = 101
 
 [State 100, 1]
@@ -1653,12 +1715,14 @@ y = -6
 type = VelSet
 trigger1 = Time = 4
 trigger1 = Command = "holdfwd"
+trigger2 = AILevel && random %3 = 0
 x = 3
 
 [State 5210, 2] ;Go back
 type = VelSet
 trigger1 = Time = 4
 trigger1 = Command = "holdback"
+trigger2 = AILevel && random %3 = 0
 x = -3
 
 [State 5210, 4]
@@ -1729,7 +1793,7 @@ type = S
 [State 180, ore]
 type = ChangeState
 triggerall = matchover
-trigger1 = enemynear,name = "Bruno" || enemynear,name = "Kimorati" || enemynear,name = "Bucciarati" || enemynear,name = "Bruno Bucciarati"
+trigger1 = enemynear,name = "Bruno" || enemynear,name = "KM_Bucciarati" || enemynear,name = "Bucciarati" || enemynear,name = "Bruno Bucciarati"
 value = 183
 
 [State 180, into]
@@ -1926,7 +1990,7 @@ velset = 0,0
 [State 0, end]
 type = changestate
 triggerall = time > 0
-trigger1 = p2name = "Bruno" || p2name = "Kimorati" || p2name = "Bucciarati" || p2name = "Bruno Bucciarati"
+trigger1 = p2name = "Bruno" || p2name = "KM_Bucciarati" || p2name = "Bucciarati" || p2name = "Bruno Bucciarati"
 value = 194
 
 [State 0, end]
@@ -2133,15 +2197,32 @@ var(20) = 5
 
 [State 903, ]
 type = varadd
+trigger1 = var(20) > 0
 trigger1 = life = lifeMax && power = powermax
 trigger1 = command = "start"
 var(20) = -1
 
 ;debug
 [State 903, ]
-type = varset
-trigger1 = var(20) = 0
-var(1) = 2**3 - 1
+type = null
+triggerall = var(20) = 0
+trigger1 = command = "holdup"
+trigger1 = var(1) := (2**3 - 1)
+Trigger2 = !(var(1)&2**0)
+trigger2 = (facing = 1 && command = "holdback") || (facing = -1 && command = "holdfwd")
+Trigger2 = var(1) := var(1) + 2**0
+Trigger3 = !(var(1)&2**1)
+trigger3 = command = "holddown"
+Trigger3 = var(1) := var(1) + 2**1
+Trigger4 = !(var(1)&2**2)
+trigger4 = (facing = 1 && command = "holdfwd") || (facing = -1 && command = "holdback")
+Trigger4 = var(1) := var(1) + 2**2
+Trigger5 = var(1) != 7
+trigger5 = command != "holdfwd" && command != "holdup" && command != "holdback" && command != "holddown"
+trigger5 = var(1) := (2**3 - 1)
+Trigger6 = var(1) = 7
+trigger6 = command != "holdfwd" && command != "holdup" && command != "holdback" && command != "holddown"
+trigger6 = var(1) := 0
 [State 903, ]
 type = lifeset
 trigger1 = var(20) = 0
@@ -2150,6 +2231,10 @@ value = 0
 type = ctrlset
 trigger1 = var(20) = 0
 value = 1
+[State 903, ]
+type = varset
+trigger1 = var(20) = 0
+var(20) = -1
 
 [State 903, vo]
 type = playsnd
@@ -2211,7 +2296,7 @@ type = HitDef
 trigger1 = AnimElem = 2
 attr = S, NA
 animtype  = Light
-damage    = ceil(23*fVar(10)),0
+damage    = ceil(24*fVar(10)),0
 guardflag = MA
 pausetime = 11,11
 sparkno = s6000
@@ -2226,7 +2311,6 @@ guard.slidetime = 10
 ground.hittime  = 10
 ground.velocity = -4
 air.velocity = ifelse(p2stateno=5950,-1.5,-4),ifelse(p2stateno=5950,-8,-3.8 + fVar(20))
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 40,0
 givepower = 20,0
@@ -2303,7 +2387,6 @@ guard.hittime  = 14
 guard.ctrltime  = 14
 ground.velocity = -4
 air.velocity = -4, -3.8 + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 50,0
 givepower = 25,0
@@ -2364,7 +2447,7 @@ channel = 0
 type = HitDef
 trigger1 = AnimElem = 3
 attr = S, NA
-animtype  = medium
+animtype  = DiagUp
 damage    = ceil(42*fVar(10)),0
 guardflag = MA
 pausetime = 13,13
@@ -2380,9 +2463,8 @@ ground.hittime  = 16
 guard.slidetime = 14
 guard.hittime  = 14
 guard.ctrltime  = 14
-ground.velocity = -2, -9.8 + fVar(20)
-air.velocity = -2, -6.2 + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
+ground.velocity = -1.6, -11.8 + fVar(20)
+air.velocity = -1.6, -11.8 + fVar(20)
 yaccel = 0.45
 getpower = 50,0
 givepower = 20,0
@@ -2461,7 +2543,6 @@ guard.hittime  = 14
 guard.ctrltime  = 14
 ground.velocity = -4
 air.velocity = -4 ,-3.8 + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 80,0
 givepower = 40,0
@@ -2492,6 +2573,11 @@ poweradd = 0
 ctrl = 0
 anim = 300
 sprpriority = 1
+
+[State 200, init]
+type = VarSet
+trigger1 = AnimElemTime(1) = 0
+var(4)= 0
 
 [State 200, se]
 type = StateTypeSet
@@ -2563,6 +2649,12 @@ trigger1 = AnimTime = 0
 value = IfElse(StateType != A, 0, 50)
 ctrl = 1
 
+[State 200, end]
+type = CtrlSet
+trigger1 = StateType = A
+trigger1 = animelemtime(4) = 9
+value = 1
+
 ;---------------------------------------------------------------------------
 ;soccer2
 [Statedef 310]
@@ -2573,6 +2665,11 @@ poweradd = 0
 ctrl = 0
 anim = 310
 sprpriority = 1
+
+[State 200, init]
+type = VarSet
+trigger1 = AnimElemTime(1) = 0
+var(4)= 0
 
 [State 200, se]
 type = StateTypeSet
@@ -2643,6 +2740,12 @@ trigger1 = AnimTime = 0
 value = IfElse(StateType != A, 0, 50)
 ctrl = 1
 
+[State 200, end]
+type = CtrlSet
+trigger1 = StateType = A
+trigger1 = animelemtime(4) = 9
+value = 1
+
 ;---------------------------------------------------------------------------
 ;soccer3
 [Statedef 320]
@@ -2655,10 +2758,22 @@ velset = 0,0
 anim = 320
 sprpriority = 1
 
+[State 200, init]
+type = VarSet
+trigger1 = AnimElemTime(1) = 0
+var(4)= 0
+
 [State 200, se]
 type = Velset
+trigger1 = !AILevel
 trigger1 = AnimElem = 2
 x = IfElse(command="holdfwd", 2, IfElse(command="holdback", -2, 0))
+
+[State 200, se]
+type = Velset
+trigger1 = AILevel
+trigger1 = AnimElem = 2
+x = IfElse(random%2=0, -2, 0)
 
 [State 200, se]
 type = Velset
@@ -2668,7 +2783,6 @@ y = -6
 [State 200, se]
 type = StateTypeSet
 trigger1 = AnimElemTime(2) = 0
-trigger1 = StateType = A
 StateType = A
 
 [State 0, explod]
@@ -2746,6 +2860,12 @@ trigger1 = AnimElemTime(2) > 0
 trigger1 = Pos y >= 0
 value = 52
 
+[State 200, end]
+type = CtrlSet
+trigger1 = StateType = A
+trigger1 = animelemtime(3) = 9
+value = 1
+
 ;---------------------------------------------------------------------------
 ;2A
 [Statedef 400]
@@ -2786,7 +2906,7 @@ type = HitDef
 trigger1 = AnimElem = 2
 attr = C, NA
 animtype  = Light
-damage    = ceil(20*fVar(10)),0
+damage    = ceil(22*fVar(10)),0
 guardflag = L
 pausetime = 11,11
 sparkno = s6000
@@ -2801,7 +2921,6 @@ guard.slidetime = 10
 ground.hittime  = 10
 ground.velocity = -4
 air.velocity = ifelse(p2stateno=5950,-1.5,-4),ifelse(p2stateno=5950,-8,-3.8 + fVar(20))
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 40,0
 givepower = 20,0
@@ -2879,7 +2998,6 @@ guard.hittime  = 14
 guard.ctrltime  = 14
 ground.velocity = -4
 air.velocity = ifelse(p2stateno=5950,-1.5,-4),ifelse(p2stateno=5950,-8,-3.8 + fVar(20))
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 50,0
 givepower = 25,0
@@ -2978,7 +3096,6 @@ guard.hittime  = 16
 guard.ctrltime  = 16
 ground.velocity = -3,-4 + fVar(20)
 air.velocity = -3,-4 + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 80,0
 givepower = 40,0
@@ -3033,7 +3150,7 @@ type = HitDef
 trigger1 = AnimElem = 2
 attr = A, NA
 animtype  = light
-damage    = ceil(23*fVar(10)),0
+damage    = ceil(37*fVar(10)),0
 guardflag = HA
 pausetime = IfElse(var(8) > 0, 30, 11), IfElse(var(8) > 0, 30, 11)
 sparkno = -1
@@ -3050,7 +3167,6 @@ guard.ctrltime = 16
 ground.velocity = -4
 guard.velocity = IfElse(var(8) > 0, -11, -4)
 air.velocity = -2.8, -4.4 + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 40,0
 givepower = 20,(var(8)>0)*300
@@ -3112,6 +3228,11 @@ trigger1 = time = 1
 value = 600, 0 + (Random%2)
 channel = 0
 
+[State 200, end]
+type = CtrlSet
+trigger1 = animelemtime(3) = 9
+value = 1
+
 ;---------------------------------------------------------------------------
 ;JB
 [Statedef 610]
@@ -3170,7 +3291,6 @@ ground.velocity = -4
 guard.velocity = IfElse(var(8) > 0, -11, -4)
 air.velocity = IfElse(var(8) > 0, -2, -2.8), IfElse(var(8) > 0, -8, -4.4 + fVar(20))
 airguard.velocity = IfElse(var(8) > 0, -11, -2.8), -2.2
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 50,0
 givepower = 25,(var(8)>0)*300
@@ -3237,6 +3357,11 @@ type = ChangeState
 trigger1 = vel y > 0 && pos y >= 0
 value = 52
 
+[State 200, end]
+type = CtrlSet
+trigger1 = animelemtime(4) = 9
+value = 1
+
 ;---------------------------------------------------------------------------
 ;JC
 [Statedef 620]
@@ -3290,7 +3415,6 @@ ground.velocity = -4
 guard.velocity = IfElse(var(8) > 0, -11, -4)
 air.velocity = IfElse(var(8) > 0, -2, -2.8), IfElse(var(8) > 0, -8, -4.4 + fVar(20))
 airguard.velocity = IfElse(var(8) > 0, -11, -2.8), -2.2
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 80,0
 givepower = 40,(var(8)>0)*300
@@ -3365,6 +3489,11 @@ type = ChangeState
 trigger1 = vel y > 0 && pos y >= 0
 value = 52
 
+[State 200, end]
+type = CtrlSet
+trigger1 = animelemtime(4) = 9
+value = 1
+
 ;---------------------------------------------------------------------------
 ;J2C
 [Statedef 625]
@@ -3390,19 +3519,25 @@ IgnoreHitPause = 1
 
 [State 10000, vel]
 type = velmul
+trigger1 = !var(9)
 trigger1 = Time = 0
 trigger1 = vel y < 0
 y = 0.5
 
 [State 10000, vel]
 type = veladd
-trigger1 = AnimElemtime(11) < 0
-y = 0.15
+trigger1 = AnimElemtime(11) < 0 || !var(9)
+y = 0.16
 
 [State 10000, vel]
 type = veladd
-trigger1 = AnimElemtime(11) >= 0
+trigger1 = AnimElemtime(11) >= 0 || var(9)
 y = Const(Movement.yaccel)
+
+[State 200, v]
+type = VarSet
+trigger1 = AnimElem = 11
+var(9) = 1
 
 [State 200, hit]
 type = HitDef
@@ -3413,7 +3548,6 @@ trigger4 = AnimElem = 5
 trigger5 = AnimElem = 6
 trigger6 = AnimElem = 7
 trigger7 = AnimElem = 8
-trigger8 = AnimElem = 9
 attr = A, NA
 animtype  = light
 damage    = ceil(25*fVar(10)),0
@@ -3432,8 +3566,7 @@ guard.hittime = 16
 guard.ctrltime = 16
 ground.velocity = -4
 guard.velocity = -4
-air.velocity = -2.8, -4.4 + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
+air.velocity = -2.8, -6.0 + fVar(20)
 yaccel = 0.45
 getpower = 20,0
 givepower = 10,0
@@ -3461,15 +3594,15 @@ trigger1 = time = 1
 value = 625, 0
 channel = 0
 
-[State 1000, ct]
-type = Null;Ctrlset
-trigger1 = AnimElem = 11 
-value = 1
-
 [State 1000, end]
 type = ChangeState
 trigger1 = vel y > 0 && pos y >= 0
 value = 52
+
+[State 200, end]
+type = CtrlSet
+trigger1 = animelemtime(9) = 9
+value = 1
 
 ;---------------------------------------------------------------------------
 ;assault
@@ -3869,7 +4002,6 @@ guard.slidetime = 10
 ground.hittime  = 10
 ground.velocity = -7,-3 + fVar(20)
 air.velocity = -7,-3 + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 0,0
 givepower = 0,0
@@ -3931,16 +4063,24 @@ sprpriority = 2
 
 [State 800, fac]
 type = VarSet
+triggerall = !AILevel
 trigger1 = Time = 0
 trigger1 = command != "holdback"
 var(3) = 1
 
 [State 800, fac]
 type = VarSet
+triggerall = !AILevel
 trigger1 = Time = 0
 trigger1 = command != "holdfwd"
 trigger1 = command = "holdback"
 var(3) = -1
+
+[State 800, fac]
+type = VarSet
+triggerall = AILevel
+trigger1 = Time = 0
+var(3) = IfElse(backedgebodydist < 50, -1, 1)
 
 [State 800, ad]
 type = AttackDist
@@ -3956,7 +4096,7 @@ attr = S, NT
 hitflag = M-
 priority = 1, Miss
 sparkno = -1
-p1facing = 1;ifelse((var(3)=-1),-1,1)
+p1facing = 1
 p2facing = 1
 p1stateno = 810
 p2stateno = 820
@@ -4227,8 +4367,15 @@ sprpriority = 1
 
 [State 1000, command]
 type = Varset
+trigger1 = !AILevel
 trigger1 = Time = 0
 var(2) = IfElse(command = "214z", 2, 0)
+
+[State 1000, command]
+type = Varset
+trigger1 = AILevel
+trigger1 = Time = 0
+var(2) = IfElse(p2bodydist x > 150 && random %2 = 0, 2, 0)
 
 [State 1000, init]
 type = Varset
@@ -4474,6 +4621,7 @@ value = 1105, 0
 
 [State 200, se]
 type = VarSet
+trigger1 = roundstate = 2
 trigger1 = time = 58
 var(1) = 2**3 - 1
 
@@ -4489,7 +4637,7 @@ value = 0
 ctrl = 1
 
 ;------------------------------------------------------------------------------------------------------
-;kimo dash
+;KM dash
 [Statedef 1200]
 type    = S
 movetype = I
@@ -4554,9 +4702,6 @@ triggerall = anim = 1200
 triggerall = time >= 15
 trigger1 = AILevel = 0
 trigger1 = command = "x" || command = "holdx"
-trigger2 = AILevel && roundstate = 2
-trigger2 = random < 33
-trigger2 = p2bodydist x < 80
 value = 1210
 
 [State 200, end]
@@ -4565,9 +4710,6 @@ triggerall = anim = 1200
 triggerall = time >= 15
 trigger1 = AILevel = 0
 trigger1 = command = "y" || command = "holdy"
-trigger2 = AILevel && roundstate = 2
-trigger2 = random < 33
-trigger2 = p2bodydist x < 90
 value = 1220
 
 [State 200, end]
@@ -4576,14 +4718,6 @@ triggerall = anim = 1200
 triggerall = time >= 15
 trigger1 = AILevel = 0
 trigger1 = command = "z" || command = "holdz"
-trigger2 = !(p2movetype = H && p2statetype = A)
-trigger2 = AILevel && roundstate = 2
-trigger2 = random < 120
-trigger2 = p2bodydist x < 120
-trigger3 = p2movetype = H && p2statetype = A
-trigger3 = AILevel && roundstate = 2
-trigger3 = random < 63
-trigger3 = p2bodydist x < 50
 value = 1230
 
 [State 200, end]
@@ -4594,7 +4728,7 @@ value = 0
 ctrl = 1
 
 ;------------------------------------------------------------------------------------------------------
-;kimo dash > A
+;KM dash > A
 [Statedef 1210]
 type    = S
 movetype = I
@@ -4689,7 +4823,7 @@ value = 0
 ctrl = 1
 
 ;------------------------------------------------------------------------------------------------------
-;kimo dash > B
+;KM dash > B
 [Statedef 1220]
 type    = S
 movetype = A
@@ -4699,6 +4833,7 @@ facep2 = 1
 ctrl = 0
 anim = 1220
 sprpriority = 1
+velset = 0,0
 
 [State 2200, init]
 type = VarSet
@@ -4731,6 +4866,12 @@ trigger1 = AnimElemTime(2) = 0
 x = 5.5
 y = -11
 
+[State 2601, Vel]
+type = playerpush
+trigger1 = AnimElemTime(2) > 0
+trigger1 = AnimElemTime(4) < 0
+value = 0
+
 [State 2200, init]
 type = Varadd
 trigger1 = AnimElemTime(2) >= 0
@@ -4754,7 +4895,7 @@ trigger1 = AnimElemTime(2) = 0
 StateType = A
 
 [State 200, vel]
-type = VelSet
+type = Null;VelSet
 trigger1 = AnimElemTime(2) > 0
 trigger1 = p2dist x < 15
 x = 0
@@ -4821,7 +4962,7 @@ type = HitDef
 trigger1 = AnimElem = 3
 attr = A, SA
 animtype  = hard
-damage    = ceil(128*fVar(10)),0
+damage    = ceil(117*fVar(10)),0
 hitflag = MAFD
 guardflag = HA
 pausetime = 13,13
@@ -4921,7 +5062,7 @@ value = 0
 ctrl = 1
 
 ;---------------------------------------------------------------------------
-;kimo_dash > C
+;KM dash > C
 [Statedef 1230]
 type    = C
 movetype = A
@@ -4948,6 +5089,7 @@ IgnoreHitPause = 1
 type = Width
 trigger1 = (AnimElemTime (2) >= 0) && (AnimElemTime (4) < 0)
 value = 10,0
+edge = 20, 0
 
 [State 200, vel]
 type = VelMul
@@ -4994,7 +5136,6 @@ guard.ctrltime  = 16
 ground.velocity = -9,-5; + fVar(20)
 air.velocity = -9,-5; + fVar(20)
 airguard.velocity = -4,-5; + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 80,0
 givepower = 40,0
@@ -5079,7 +5220,7 @@ type = HitDef
 trigger1 = AnimElem = 3
 attr = S, SA
 animtype  = Hard
-damage    = ceil(71*fVar(10)), 0
+damage    = ceil(61*fVar(10)), 0
 guardflag = MA
 pausetime = 15,15
 sparkno = s6010
@@ -5094,7 +5235,6 @@ guard.slidetime = 14
 ground.hittime  = 14
 ground.velocity = -2.6, -6 + fVar(20)
 air.velocity = -2.6, -6 + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 80,0
 givepower = 40,0
@@ -5238,7 +5378,6 @@ ground.hittime  = 14
 ground.velocity = -1.2, -8 + fVar(20)
 air.velocity = -1.2, -7.5; + fVar(20)
 airguard.velocity = -3.5, -4
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 10,0
 givepower = 5,0
@@ -5261,7 +5400,7 @@ value = 41
 [State 1000, ct]
 type = Ctrlset
 trigger1 = time = 24
-value = 1
+value = (!AILevel)
 
 [State 1000, st]
 type = StateTypeSet
@@ -5356,7 +5495,6 @@ ground.velocity = 1.25, -11; + fVar(20)
 guard.velocity = 6
 air.velocity = 1.25, -11; + fVar(20)
 airguard.velocity = 3.5, -4; + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 80,0
 givepower = 40,0
@@ -5537,7 +5675,6 @@ guard.slidetime = 14
 ground.hittime  = 14
 ground.velocity = 0, -1.5; + fVar(20)
 air.velocity = 0, -1.5; + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 10,0
 givepower = 5,0
@@ -5567,7 +5704,6 @@ ground.hittime  = 14
 ground.velocity = -8, -11 + fVar(20)
 air.velocity = -8, -11 + fVar(20)
 airguard.velocity = -3.5, -4
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
 yaccel = 0.45
 getpower = 40,0
 givepower = 15,0
@@ -5712,8 +5848,7 @@ ground.hittime  = 14
 ground.velocity = -4, 7 + fVar(20)
 air.velocity = -4, 7 + fVar(20)
 airguard.velocity = -4, -4
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
-fall.yvelocity = -6.5
+fall.yvelocity = -3.5
 yaccel = 0.45
 getpower = 80,0
 givepower = 40,0
@@ -5773,7 +5908,7 @@ y = Const(Movement.yaccel)
 
 [State next]
 type = changestate
-trigger1 = Pos Y >= 0
+trigger1 = Vel Y > 0 && Pos Y >= 0
 value = 2205
 
 ;---------------------------------------------------------------------------
@@ -5908,7 +6043,7 @@ attr = A, SA
 animtype  = Hard
 damage    = ceil(30*fVar(10)), 0
 guardflag = HA
-pausetime = 10,24
+pausetime = 10, IFElse(var(20) = 0, 24, 16)
 guard.pausetime = 10,16
 sparkno = s6001
 guard.sparkno = s6040
@@ -5922,8 +6057,7 @@ guard.slidetime = 14
 ground.hittime  = 14
 ground.velocity = -6
 air.velocity = -4, 7 + fVar(20)
-fall.xvelocity = ifelse((enemynear,facing=facing),1,-1)
-fall.yvelocity = -9.5
+fall.yvelocity = -11.0
 yaccel = 0.45
 getpower = 40,0
 givepower = 20,0
@@ -5958,7 +6092,7 @@ value = 2250
 [State next]
 type = changestate
 trigger1 = AnimElemTime(3) >= 0
-trigger1 = Pos Y >= 0
+trigger1 = Vel Y > 0 && Pos Y >= 0
 value = 2205
 
 ;---------------------------------------------------------------------------
@@ -8918,7 +9052,7 @@ pos = -10, -90
 [State 6000, Explod]
 type = destroyself
 trigger1 = !numhelper(3250)
-trigger2 = helper(3250),stateno = 3290
+;trigger2 = helper(3250),stateno = 3290
 
 ;---------------------------------------------------------------------
 ;強化フラグ表示
@@ -9224,21 +9358,6 @@ trigger1 = Time = 0
 x = -1.2
 y = gethitvar(fall.yvel)
 
-[State 1000, ?��A?��j?��?��]
-type = posadd
-trigger1 = gethitvar(fall.yvel) = -10.1
-trigger1 = time = 1
-y = -10
-[State 1000, ?��A?��j?��?��]
-type = changeanim2
-trigger1 = gethitvar(fall.yvel) = -10.1
-value = 1690
-
-[State 1000, ?��A?��j?��?��]
-type = angledraw
-trigger1 = gethitvar(fall.yvel) = -10.1
-value = 0+(time*30)
-
 [State 5101, 1] ;Coming hit ground anim (normal)
 type = ChangeAnim
 triggerall = time = 0
@@ -9265,30 +9384,7 @@ y = 20
 [State 5101, 5] ;Acceleration
 type = VelAdd
 trigger1 = 1
-y = Const(Movement.yaccel)
-
-[State 5040, 5] ;Recover near ground
-type = SelfState
-triggerall = gethitvar(fall.yvel) != -10.1
-triggerall = gethitvar(fall.yvel) < 0
-triggerall = time >= 15
-triggerall = Vel Y > 0
-triggerall = Pos Y >= -20
-triggerall = alive
-trigger1 = canrecover
-trigger1 = Command = "recovery"
-value = 5200 ;HITFALL_RECOVER
-
-[State 5040, 6]; Recover in mid air
-type = SelfState
-triggerall = gethitvar(fall.yvel) != -10.1
-triggerall = gethitvar(fall.yvel) < 0
-triggerall = time >= 15
-triggerall = Vel Y > 0
-triggerall = alive
-trigger1 = canrecover
-trigger1 = Command = "recovery"
-value = 5210 ;HITFALL_AIRRECOVER
+y = .45
 
 [State 5101, 6] ;Hit ground
 type = selfState

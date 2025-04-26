@@ -48,6 +48,7 @@ var(13) = 1
 type = VarAdd
 triggerall = movehit = 1 || projhit = 1
 trigger1 = var(8)
+trigger2 = stateno = 215
 var(13) = 2
 
 [State -2,ヒット数初期化]
@@ -80,6 +81,11 @@ type = varset
 trigger1 = (statetype != A && stateno != 52 && stateno != 700)
 trigger2 = movetype = H
 var(8) = 0
+
+[State -2,幹部ジラーレフラグ]
+type = varset
+trigger1 = (statetype != A)
+var(9) = 0
 
 [State -3, ExShadow]
 type = AfterImageTime
@@ -167,8 +173,15 @@ IgnoreHitPause = 1
 [State -2, クリップボード]
 type     = DisplayToClipBoard
 trigger1 = 1
-text     = "power=%d, SpeEx=%d, hit=%d 20=%d, hosei=%f"
+text     = "power=%d, SpeEx=%d, hit=%d 20=%d uki=%f"
 params   = power, var(0), var(13), var(20), fvar(10)
+IgnoreHitPause = 1
+
+[State -2, クリップボード]
+type     = DisplayToClipBoard
+trigger1 = AILevel
+text     = "p2bx=%f, p2by=%f, moveset=%d, 59=%d, uki=%f"
+params   = p2bodydist x, p2bodydist y, var(58), var(59), fvar(10)
 IgnoreHitPause = 1
 
 
