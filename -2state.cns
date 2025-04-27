@@ -46,10 +46,14 @@ var(13) = 1
 ;加重加算
 [State -2,ヒット数]
 type = VarAdd
-triggerall = movehit = 1 || projhit = 1
+triggerall = movehit = 1
 trigger1 = var(8)
-trigger2 = stateno = 215
 var(13) = 2
+[State -2,ヒット数]
+type = VarAdd
+triggerall = movehit = 1
+trigger1 = stateno = 215
+var(13) = 1
 
 [State -2,ヒット数初期化]
 type = VarSet
