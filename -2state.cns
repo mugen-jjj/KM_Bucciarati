@@ -174,14 +174,14 @@ IgnoreHitPause = 1
 type     = DisplayToClipBoard
 trigger1 = 1
 text     = "power=%d, SpeEx=%d, hit=%d 20=%d uki=%f"
-params   = power, var(0), var(13), var(20), fvar(10)
+params   = power, var(0), var(13), var(20), fvar(20)
 IgnoreHitPause = 1
 
 [State -2, クリップボード]
 type     = DisplayToClipBoard
 trigger1 = AILevel
 text     = "p2bx=%f, p2by=%f, moveset=%d, 59=%d, uki=%f"
-params   = p2bodydist x, p2bodydist y, var(58), var(59), fvar(10)
+params   = p2bodydist x, p2bodydist y, var(58), var(59), fvar(20)
 IgnoreHitPause = 1
 
 

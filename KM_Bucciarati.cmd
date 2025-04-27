@@ -330,7 +330,7 @@ trigger1 = (var(59)=1)
 trigger1 = Inguarddist && p2movetype = A
 trigger1 = random < 40 + (enemynear(var(48)),animtime>=-7-1)*30 + (life < 200 && power = [1000, 2500])*50 + (p2life < 200)* 50
 ;d‚¢‚Æ‚«
-trigger2 = stateno=2000 && p2life < 200 && !(var(1)&2**0) && fvar(10) <= 0.7
+trigger2 = stateno=2000 && p2life < 200 && !(var(1)&2**0) && fvar(20) >= 3
 trigger2 = movehit = 1
 value = 3100
 
@@ -393,7 +393,7 @@ trigger2 = moveguarded = 1
 trigger2 = random % (4-(var(59)=0)) = 0
 ;combo
 trigger3 = movehit = 1
-trigger3 = stateno = 2000 && fvar(10) > 0.6
+trigger3 = stateno = 2000 && fvar(20) < 3
 trigger3 = !(var(1)&2**0)
 value = 1200
 
@@ -1143,7 +1143,7 @@ triggerall = statetype = A
 
 triggerall = var(58) = 11010
 trigger1 = var(21)
-trigger1 = (fvar(10) < 0.6 && p2bodydist y > 10) || (Enemynear(var(48)),Vel Y && Enemynear(var(48)),Vel Y > -3 && p2bodydist y > -10) || vel y > 0
+trigger1 = (fvar(20) > 5 && p2bodydist y > 10) || (Enemynear(var(48)),Vel Y && Enemynear(var(48)),Vel Y > -3 && p2bodydist y > -10) || vel y > 0
 trigger1 = 1||var(58) := 0
 
 ;---------------------------------------------------------------------------

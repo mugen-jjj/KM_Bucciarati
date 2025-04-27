@@ -2310,7 +2310,7 @@ ground.slidetime = 12
 guard.slidetime = 10
 ground.hittime  = 10
 ground.velocity = -4
-air.velocity = ifelse(p2stateno=5950,-1.5,-4),ifelse(p2stateno=5950,-8,-3.8 + fVar(20))
+air.velocity = -4,-3.8 + fVar(20)
 yaccel = 0.45
 getpower = 40,0
 givepower = 20,0
@@ -2920,7 +2920,7 @@ ground.slidetime = 12
 guard.slidetime = 10
 ground.hittime  = 10
 ground.velocity = -4
-air.velocity = ifelse(p2stateno=5950,-1.5,-4),ifelse(p2stateno=5950,-8,-3.8 + fVar(20))
+air.velocity = -4,-3.8 + fVar(20)
 yaccel = 0.45
 getpower = 40,0
 givepower = 20,0
@@ -2997,7 +2997,7 @@ guard.slidetime = 14
 guard.hittime  = 14
 guard.ctrltime  = 14
 ground.velocity = -4
-air.velocity = ifelse(p2stateno=5950,-1.5,-4),ifelse(p2stateno=5950,-8,-3.8 + fVar(20))
+air.velocity = -4,-3.8 + fVar(20)
 yaccel = 0.45
 getpower = 50,0
 givepower = 25,0
@@ -5244,6 +5244,7 @@ down.bounce = 0
 
 [State 1000, end]
 type = ChangeState
+trigger1 = roundstate = 2
 trigger1 = MoveContact
 trigger1 = (Var(1)&2**0)
 value = 2050
@@ -5517,6 +5518,7 @@ numhits = 0
 
 [State 1000, next]
 type = ChangeState
+trigger1 = roundstate = 2
 trigger1 = MoveContact
 trigger1 = Animelemtime(4) >= 20
 trigger1 = (Var(1)&2**1)
@@ -5870,6 +5872,7 @@ Persistent = 0
 
 [State 1000, next]
 type = ChangeState
+trigger1 = roundstate = 2
 trigger1 = MoveContact
 trigger1 = (Var(1)&2**2)
 value = 2250
