@@ -355,20 +355,28 @@ triggerall = statetype != A
 
 triggerall = var(58) = 0
 triggerall = var(1) != 7
+
+triggerall = var(1) = 0 || random < (var(1)&2**0)*40 + (var(1)&2**2)*40 + (!(var(1)&2**0) && !(var(1)&2**2))*80
 ;相手跳ねてる
 trigger1 = var(21) || (stateno = 2205 && var(4))
-trigger1 = random < (var(1)=0)*60 + (var(1)&2**0)*20 + (var(1)&2**2)*20
-trigger1 = (p2stateno = [5114,5115]) && (p2bodydist x > 100 || enemynear(var(48)),vel y <= 0)
+trigger1 = (p2stateno = [5114,5115]); && (p2bodydist x > 100 || enemynear(var(48)),vel y <= 0)
 ;ロケパン直後
-trigger2 = var(21)
-trigger2 = random < (var(1)=0)*80 + (var(1)&2**0)*30 + (var(1)&2**2)*30
-trigger2 = p2bodydist x > 100 || (p2statetype = L && p2bodydist x > 60)
+trigger2 = stateno = 1000 && !animtime;var(21)
+trigger2 = p2bodydist x > 110 || (p2statetype = L && p2bodydist x > 60)
 trigger2 = numhelper(1005)
 trigger2 = helper(1005),rootdist x > -120
 ;combo
-trigger3 = stateno=2000 && p2life > 100 && var(1) = 0 && random%2 = 0
+trigger3 = stateno=2000 && !(p2life < 200 && power >= 1000) && !(p2life < 400 && power >= 3000)
 trigger3 = movehit = 1
-trigger3 = var(1)=0 || (random %2 = 0)
+;投げ後
+trigger4 = stateno=810 && time = 100
+trigger4 = frontEdgeBodyDist > 90
+;こいつ後
+trigger5 = stateno=1230 && movehit && !animtime && p2statetype = A && p2movetype = H
+trigger5 = frontEdgeBodyDist > 90
+;236H後
+trigger6 = stateno=52 && time = 3 && prevstateno = 3111
+trigger6 = random %2 = 0
 ;
 value = 1100
 
@@ -1153,8 +1161,8 @@ type = Null
 triggerall = AILevel && RoundState = 2
 triggerall = (var(58) = [0, 10000))
 
-triggerall = enemynear(var(48)),vel y < -8
-triggerall = p2stateno = 5115
+triggerall = stateno = 2250 || (stateno = 2205 && prevstateno = 2250)
+triggerall = p2stateno = [5114, 5115]
 
 trigger1 = (var(1)&2**1) ;シュート可能
 trigger1 = var(58) := 2100
@@ -1235,9 +1243,9 @@ triggerall = (var(58) = [0, 10000))
 
 triggerall = stateno = 1230 && var(4)
 triggerall = movehit = 1
-trigger1 = enemynear(var(48)),backedgebodydist < 25 && p2bodydist x < 50
+trigger1 = enemynear(var(48)),backedgebodydist < 30 && p2bodydist x < 60
 trigger1 = var(58) :=  IfElse(power > 3000, 13000, IfElse((power=[1000, 2500])||p2life<200, 13100, 0))
-trigger2 = enemynear(var(48)),backedgebodydist < 25 && p2bodydist x < 15
+trigger2 = enemynear(var(48)),backedgebodydist < 30 && p2bodydist x < 15
 trigger2 = var(58) :=  IfElse(power > 3000, 13000, IfElse((power=[1000, 2500])||p2life<200, 13100, 0))
 
 ;GHA
