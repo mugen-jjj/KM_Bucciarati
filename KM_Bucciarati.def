@@ -27,7 +27,7 @@ pal8    = act/sugar.act
 pal9    = act/deep.act
 pal10   = act/snake.act
 pal11   = act/floyd.act
-pal12   = act/sabbath.act
+pal12   = act/addtional.act
 
 ;-----------------------------------------------------------------------------
 
