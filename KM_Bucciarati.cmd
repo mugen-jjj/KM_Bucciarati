@@ -97,6 +97,24 @@ command = ~D,DB,B,~z
 time = 12
 
 [Command]
+name = "236b"
+command = ~D,DF,F,b
+time = 12
+[Command]
+name = "236b"
+command = ~D,DF,F,~b
+time = 12
+
+[Command]
+name = "214b"
+command = ~D,DB,B,b
+time = 12
+[Command]
+name = "214b"
+command = ~D,DB,B,~b
+time = 12
+
+[Command]
 name = "22x"
 command = ~D, D, x
 time = 15
@@ -389,28 +407,43 @@ triggerall = statetype != A
 triggerall = (p2statetype != L || p2stateno = 5120)
 triggerall = var(58) = 0
 ;N
-trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1)
+trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
 trigger1 = !inguarddist
 trigger1 = p2bodydist x >= 70 || moveguarded
 trigger1 = (p2statetype != A || p2bodydist y > -80)
-trigger1 = random < 20 + (moveguarded=1)*60
+trigger1 = p2stateno != [4400, 4500]
+trigger1 = random < 25 + (moveguarded = 1 || stateno = 2205)*60
 ;combo
 trigger2 = movehit = 1
 trigger2 = stateno = 2000 && fvar(20) < 3
 trigger2 = !(var(1)&2**0)
 var(58) = 1210
 
-[State -1, KM_kyori_mise]
+[State -1, KM_kyori]
 type = Varset
 triggerall = AILevel && roundstate = 2
 triggerall = statetype != A
 triggerall = var(58) = 0
 ;N
-trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1)
+trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
 trigger1 = !inguarddist
-trigger1 = p2bodydist x >= 75 || moveguarded
-trigger1 = random < 13 + (moveguarded=1)*50
-var(58) = 1220 + ((backedgebodydist < 45 || random%4=0) && p2statetype != A)*2
+trigger1 = p2bodydist x >= 70 || moveguarded
+trigger1 = backedgebodydist > 45
+trigger1 = random < 11 + (moveguarded = 1 || stateno = 2205)*70
+var(58) = 1220
+
+[State -1, KM_mise]
+type = Varset
+triggerall = AILevel && roundstate = 2
+triggerall = statetype != A
+triggerall = var(58) = 0
+;N
+trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
+trigger1 = !inguarddist
+trigger1 = p2bodydist x >= 70 || moveguarded
+trigger1 = enemynear(var(48)),backedgebodydist > 80
+trigger1 = random < 11 + (moveguarded = 1 || stateno = 2205)*70
+var(58) = 1222
 
 [State -1, KM_shunshin]
 type = Null
@@ -420,31 +453,31 @@ triggerall = statetype != A
 triggerall = !inguarddist
 triggerall = var(58) = 0
 ;目の前でA
-trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1)
-trigger1 = p2bodydist x >= 60 || moveguarded
-trigger1 = random < 8 + (var(59) = 0) * 7 + (moveguarded=1)*27
+trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
+trigger1 = p2bodydist x >= 70 || moveguarded
+trigger1 = random < 5 + (var(59) = 0) * 8 + (moveguarded = 1 || stateno = 2205)*18
 trigger1 = var(58) := 1230
 ;遠目でB
-trigger2 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1)
-trigger2 = p2bodydist x >= 60 || moveguarded
-trigger2 = random < 8 + (var(59) = 0) * 6 + (moveguarded=1)*27
+trigger2 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
+trigger2 = p2bodydist x >= 70 || moveguarded
+trigger2 = random < 5 + (var(59) = 0) * 8 + (moveguarded = 1 || stateno = 2205)*24
 trigger2 = var(58) := 1231
 ;目の前でB
-trigger3 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1)
-trigger3 = p2bodydist x >= 60 || moveguarded
+trigger3 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
+trigger3 = p2bodydist x >= 70 || moveguarded
 trigger3 = enemynear(var(48)),backedgebodydist > 45
-trigger3 = random < 8 + (var(59) = 0) * 10 + (moveguarded=1)*27
+trigger3 = random < 5 + (var(59) = 0) * 12 + (moveguarded = 1 || stateno = 2205)*24
 trigger3 = var(58) := 1236
 ;コーラ
-trigger4 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1)
-trigger4 = p2bodydist x >= 60 || moveguarded
-trigger4 = random < 7 + (var(59) = 0) * 7 + (moveguarded=1)*20 - (var(59) = 1)*10
+trigger4 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
+trigger4 = p2bodydist x >= 70 || moveguarded
+trigger4 = random < 4 + (var(59) = 0) * 7 + (moveguarded = 1 || stateno = 2205)*10 - (var(59) = 1)*10
 trigger4 = var(58) := 1232
 ;コーラ(近くで)
 trigger5 = var(59) = 0
-trigger5 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1)
-trigger5 = p2bodydist x >= 60 || moveguarded
-trigger5 = random < 5 + (var(59) = 0) * 6 + (moveguarded=1)*13
+trigger5 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
+trigger5 = p2bodydist x >= 70 || moveguarded
+trigger5 = random < 4 + (var(59) = 0) * 6 + (moveguarded = 1 || stateno = 2205)*10
 trigger5 = var(58) := 1237
 
 [State -1, KM_zipperA]
@@ -453,11 +486,11 @@ triggerall = AILevel && roundstate = 2
 triggerall = statetype != A
 ;triggerall = (p2statetype != L || p2stateno = 5120)
 triggerall = var(58) = 0
-trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1)
-trigger1 = enemynear(var(48)),backedgebodydist > 35
+trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
+trigger1 = enemynear(var(48)),backedgebodydist > 30
 trigger1 = !inguarddist
-trigger1 = random < 15 + (var(59) = 0 && p2bodydist x = [100, 140])* 30 + (moveguarded=1)*70
-trigger1 = var(58) := 1240 + (p2dist x < 30) * 5
+trigger1 = random < 10 + (numhelper(1005)) * 11 + (var(59) = 0 && p2bodydist x = [100, 140])* 18 + (moveguarded = 1 || stateno = 2205)*90
+trigger1 = var(58) := 1240 + (p2dist x < 34 || random % 3 = 0) * 5
 
 [State -1, KM_zipperB]
 type = Null
@@ -465,10 +498,10 @@ triggerall = AILevel && roundstate = 2
 triggerall = statetype != A
 ;triggerall = (p2statetype != L || p2stateno = 5120)
 triggerall = var(58) = 0
-trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1)
+trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
 trigger1 = !inguarddist
 trigger1 = backedgebodydist < 20
-trigger1 = random < 30 + (var(59) = 0) * 30 + (moveguarded=1)*50
+trigger1 = random < 30 + (var(59) = 0) * 30 + (moveguarded = 1 || stateno = 2205)*50
 trigger1 = var(58) := 1241
 
 
@@ -482,8 +515,8 @@ triggerall = NumHelper(1005) = 0
 triggerall = var(58) = 0
 ;;trigger1 = p2movetype != H
 trigger1 = (p2statetype != A || p2bodydist y > -100)
-trigger1 = var(21) || ((var(4) = [1, 2]) && moveguarded = 1)
-trigger1 = p2bodydist x > 120 || p2statetype = L || moveguarded
+trigger1 = var(21) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
+trigger1 = p2bodydist x > 100 || p2statetype = L || moveguarded
 trigger1 = random < 27 + (var(1)=0)*20 + (!(Var(1)&2**0))*10 + (!(Var(1)&2**2))*10 + (p2statetype = L)*20 + (moveguarded = 1) * (200 + (var(59))*100)
 
 ;5S
@@ -494,12 +527,11 @@ triggerall = statetype != A
 
 triggerall = var(58) = 0
 triggerall = (p2statetype != L)
-trigger1 = (var(21))
-;;trigger1 = p2movetype != H
+trigger1 = var(21) || ((var(4) = 1) && moveguarded = 1)
 trigger1 = (p2statetype != A || p2bodydist y > -90)
 trigger1 = p2bodydist x < 180
-trigger1 = !(inguarddist && p2bodydist x < 60)
-trigger1 = random < 20 + (var(1)&2**0)* 20 + (p2bodydist x = [85, 130])*10 - (inguarddist)* 30
+trigger1 = !(inguarddist && p2bodydist x < 55)
+trigger1 = random < 28 + (var(1)&2**0)* 15 + (p2bodydist x = [85, 130])*10 - (inguarddist)* 30
 ;繋ぎ
 trigger2 = stateno=220 || stateno=420
 trigger2 = movecontact = 1
@@ -524,7 +556,7 @@ trigger1 = p2movetype != H
 trigger1 = (p2statetype != A || p2bodydist y > -100)
 trigger1 = p2bodydist x < 90
 trigger1 = !(inguarddist && p2bodydist x < 30)
-trigger1 = random < 10 + (var(1)&2**1)* 5 + (p2statetype = A)*10 + (var(1)&2**1 && moveguarded = 1)*60
+trigger1 = random < 15 + (var(1)&2**1)* 8 + (p2statetype = A)*20 + (var(1)&2**1 && moveguarded = 1)*60
 value = 2100
 
 [State -1, js]
@@ -549,10 +581,9 @@ triggerall = p2statetype != L
 
 triggerall = var(58) = 0
 trigger1 = (var(21)) || ((var(4) = 1) && moveguarded = 1)
-;;trigger1 = p2movetype != H
 trigger1 = (p2statetype != A)
 trigger1 = p2bodydist x = [-5, 140]
-trigger1 = random < 15 + (p2bodydist x = [60, 140]) * 5 + (var(59)=0) * 9 + (moveguarded = 1)*60
+trigger1 = random < 15 + (p2bodydist x = [60, 140]) * 5 + (var(59)=0) * 9 + (moveguarded = 1)*70
 
 ;投げ
 [State -1, 1000]
@@ -565,7 +596,7 @@ triggerall = var(58) = 0
 trigger1 = (var(21))
 trigger1 = p2movetype != H
 trigger1 = p2statetype != A && p2statetype != L
-trigger1 = random < 50 + (var(59)=1)*150
+trigger1 = random < 100 + (var(59)=1)*150
 trigger1 = p2bodydist x < 20
 value = 800
 
@@ -699,7 +730,7 @@ triggerall = p2statetype != A
 trigger1 = (var(21))
 ;;trigger1 = p2movetype != H
 trigger1 = p2bodydist x = [-5, 65]
-trigger1 = random < 30 + (var(59)=0)*30
+trigger1 = random < 50 + (var(59)=0)*40
 ;
 trigger2 = (var(21))
 trigger2 = p2movetype = H
@@ -768,7 +799,7 @@ trigger1 = p2bodydist x < 60
 trigger1 = p2bodydist y < -40
 trigger1 = random < 100
 ;アサルト
-trigger2 = stateno = 700 && time >= 20
+trigger2 = stateno = 700 && time >= 17
 trigger2 = p2bodydist y < -40
 
 [State -1, jc]
@@ -784,7 +815,7 @@ trigger1 = p2bodydist x < 80
 trigger1 = p2bodydist y > -40
 trigger1 = random < 100
 ;アサルト
-trigger2 = stateno = 700 && time >= 20
+trigger2 = stateno = 700 && time >= 17
 trigger2 = p2bodydist y >= -40
 
 [State -1, j2b]
@@ -804,7 +835,7 @@ type = ChangeState
 triggerall = AILevel && roundstate = 2
 trigger1 = statetype != A
 trigger1 = (var(21))
-trigger1 = random < 10 + (p2bodydist x > 180)*10 + (numhelper(3250)>0 && p2bodydist x > 160)*15
+trigger1 = random < 15 + (p2bodydist x > 150)*10 + (numhelper(1000) || numhelper(3250))*15
 trigger1 = stateno != 100
 value = 100
 
@@ -888,7 +919,6 @@ triggerall = stateno = 1200 && anim = 1200
 triggerall = time >= 15
 trigger1 = var(58) = 1210
 trigger1 = p2bodydist x < 110
-trigger1 = 1||var(58) := 0
 value = 1210
 
 [State 1000, end]
@@ -929,13 +959,13 @@ trigger2 = p2bodydist x < 120
 trigger3 = var(58) = 1237
 trigger3 = p2bodydist x < 35
 trigger4 = var(58) = 1232
-trigger4 = p2bodydist x < 100
+trigger4 = p2bodydist x < 90
 value = 1230
 
 [State 1000, end]
 type = Varset
 triggerall = AILevel
-triggerall = var(58) = 1232 || var(58) = 1232
+triggerall = var(58) = 1232 || var(58) = 1237
 trigger1 = stateno = 1230
 trigger1 = Time = 1
 var(58) = 0
@@ -944,7 +974,7 @@ var(58) = 0
 type = Varset
 triggerall = var(58) = [1230, 1239]
 trigger1 = stateno = 1230 && animelemtime(3) = 5
-var(58) = IfElse(random%3=0&&var(59)=0&&(p2dist x=[-30,30]), 800, IfElse((p2bodydist x = [40, 110])&&random%3=0&&var(1)&2**2,2100,620))
+var(58) = IfElse(random%3=0&&var(59)=0&&(p2dist x=[-50,50]), 800, IfElse((p2bodydist x = [40, 110])&&random%3=0&&var(1)&2**2,2100,620))
 
 [State -1, jc]
 type = ChangeState
@@ -964,13 +994,14 @@ triggerall = AILevel && roundstate = 2
 triggerall = stateno = 1200 && anim = 1200
 triggerall = time >= 15
 trigger1 = var(58) = 1240
-trigger1 = p2bodydist x < 120
+trigger1 = p2bodydist x < 130
 trigger2 = var(58) = 1245
-trigger2 = p2bodydist x < 30
+trigger2 = p2dist x < 85
 value = 1240
 
 [State 1000, end]
 type = Varset
+triggerall = AILevel && roundstate = 2
 triggerall = var(58) = 1240 || var(58) = 1245
 trigger1 = stateno = 1240
 trigger1 = Time = 1
@@ -996,6 +1027,20 @@ trigger1 = var(58) = 1241
 trigger1 = p2bodydist x < 70 || inguarddist
 value = 1240
 
+[State 1000, end]
+type = Varset
+triggerall = AILevel
+triggerall = var(58) = [1240, 1249]
+trigger1 = stateno = 1240
+trigger1 = Time = 1
+var(58) = 0
+
+[state -1, end]
+type = varset
+triggerall = var(58) = 1241
+trigger1 = enemynear(var(48)),backedgebodydist < 15
+var(58) = 1240
+
 [state -1, end]
 type = varset
 triggerall = var(58) = 620
@@ -1007,23 +1052,8 @@ var(58) = 0
 type = varset
 triggerall = var(58) = 800
 triggerall = stateno != [1200, 1299]
-triggerall = var(21)
 trigger1 = p2statetype = A
 trigger2 = p2dist x != [-50, 50]
-var(58) = 0
-
-[state -1, end]
-type = varset
-triggerall = var(58) = 1241
-trigger1 = enemynear(var(48)),backedgebodydist < 15
-var(58) = 1240
-
-[State 1000, end]
-type = Varset
-triggerall = AILevel
-triggerall = var(58) = [1240,1249]
-trigger1 = stateno = 1240
-trigger1 = Time = 1
 var(58) = 0
 
 ;---------------------------------------------------------------------------
@@ -1138,7 +1168,7 @@ triggerall = var(58) = 0
 triggerall = statetype != A
 triggerall = var(21)
 trigger1 = p2statetype != A
-trigger1 = p2bodydist x = [10, 45]
+trigger1 = p2bodydist x = [5, 45]
 trigger1 = p2statetype != L || p2stateno = 5120
 trigger1 = !(enemynear(var(48)),backedgebodydist < 20)
 trigger1 = random < 40 + (backedgebodydist < 20 && !inguarddist)*40
@@ -1173,7 +1203,7 @@ triggerall = p2statetype != A
 triggerall = p2statetype != L || p2stateno = 5120
 trigger1 = var(21)
 trigger1 = p2bodydist x < 100
-trigger1 = random < 15 + (var(1)&2**2)*18 + (var(59)=1)* 10
+trigger1 = random < 19 + (var(1)&2**2)*18 + (var(59)=1)* 10
 trigger1 = var(58) := -2200
 trigger2 = stateno = 400 && moveguarded = 1
 trigger2 = random < 120 + (var(1)&2**2)*100 + (var(59)=1)* 50
@@ -1441,7 +1471,7 @@ type = Null
 triggerall = AILevel && RoundState = 2
 triggerall = (var(58) = [0, 10000))
 
-triggerall = stateno = 1210 && var(4)
+triggerall = (stateno = 1210 && var(4)) || (stateno = 2000 && fvar(20) < 5)
 triggerall = movehit = 1
 trigger1 = enemynear(var(48)),backedgebodydist < 30 && p2bodydist x < 60
 trigger1 = var(58) :=  IfElse(power > 3000, 13000, IfElse((power=[1000, 2500])||p2life<200, 13100, 0))
@@ -1454,9 +1484,11 @@ type = ChangeState
 triggerall = AILevel && roundstate = 2
 triggerall = statetype != A
 triggerall = power >= 3000
-trigger1 = var(58) = 13000
-trigger1 = stateno = 1210 && var(4)
-trigger1 = movehit
+triggerall = var(58) = 13000
+triggerall = Var(4)
+triggerall = movehit
+trigger1 = stateno = 1210
+trigger2 = stateno = 2000
 value = IfElse(p2life > 150, 3000, 3100)
 
 ;236H
@@ -1465,10 +1497,12 @@ type = ChangeState
 triggerall = AILevel && roundstate = 2
 triggerall = statetype != A
 triggerall = power >= 1000
-trigger1 = var(58) = 13100
-trigger1 = stateno = 1210 && var(4)
-trigger1 = movehit
-Trigger1 = Enemynear(var(48)),Pos Y+Enemynear(var(48)),Vel Y * 8 + fvar(30) * 8 * (8 + 1) / 2 >= -15
+triggerall = var(58) = 13100
+triggerall = Var(4)
+triggerall = movehit
+Triggerall = Enemynear(var(48)),Pos Y+Enemynear(var(48)),Vel Y * 8 + fvar(30) * 8 * (8 + 1) / 2 >= -15
+trigger1 = stateno = 1210
+trigger2 = stateno = 2000
 value = 3100
 
 
@@ -1498,11 +1532,8 @@ triggerall = statetype != A
 triggerall = command = "c"
 triggerall = power >= 3000
 trigger1 = ctrl
-trigger2 = (stateno = [200, 699]) && var(4) && !var(8)
-trigger3 = (stateno = 1000 || (stateno = [1200, 1250])) && var(4)
-trigger4 = ((stateno = [2000, 2050]) || (stateno = [2100, 2150]) || (stateno = [2200, 2250])) && var(4)
-trigger5 = stateno = 1230 && animelemtime(3) >= 5
-trigger6 = stateno = 52 && var(8) > 1
+trigger2 = movetype = A && (var(4) = [1, 3])
+trigger3 = stateno = 52 && var(8) > 1
 value = 3000
 
 ;236h
@@ -1514,10 +1545,8 @@ triggerall = statetype != A
 triggerall = command = "236aa" || command = "236b"
 triggerall = power >= 1000
 trigger1 = ctrl
-trigger2 = (stateno = [200, 499]) && var(4)
-trigger3 = (stateno = 1000 || (stateno = [1200, 1250])) && var(4)
-trigger4 = ((stateno = [2000, 2050]) || (stateno = [2100, 2150]) || (stateno = [2200, 2250])) && var(4)
-trigger5 = stateno = 52 && var(8) > 1
+trigger2 = movetype = A && (var(4) = [1, 3])
+trigger3 = stateno = 52 && var(8) > 1
 value = 3100
 
 ;214h
@@ -1530,10 +1559,8 @@ triggerall = command = "214aa" || command = "214b"
 triggerall = power >= 1000
 triggerall = numhelper(3250) = 0
 trigger1 = ctrl
-trigger2 = (stateno = [200, 499]) && var(4)
-trigger3 = (stateno = 1000 || (stateno = [1200, 1250])) && var(4)
-trigger4 = ((stateno = [2000, 2050]) || (stateno = [2100, 2150]) || (stateno = [2200, 2250])) && var(4)
-trigger5 = stateno = 52 && var(8) > 1
+trigger2 = movetype = A && (var(4) = [1, 3])
+trigger3 = stateno = 52 && var(8) > 1
 value = 3200
 
 ;==============================================================================
@@ -1547,9 +1574,8 @@ triggerall = roundstate = 2
 triggerall = statetype != A
 triggerall = command = "41236x" || command = "41236y" || command = "41236z"
 trigger1 = ctrl
-trigger2 = (stateno = [200, 499]) && var(4)
-trigger3 = ((stateno = [2000, 2050]) || (stateno = [2100, 2150]) || stateno = 2205) && var(4)
-trigger4 = stateno = 52 && var(8) > 1
+trigger2 = movetype = A && (var(4) = [1, 2])
+trigger3 = stateno = 52 && var(8) > 1
 value = 1200
 
 ;ude
@@ -1561,9 +1587,8 @@ triggerall = statetype != A
 triggerall = command = "214x" || command = "214y" || command = "214z"
 triggerall = NumHelper(1005) = 0
 trigger1 = ctrl
-trigger2 = (stateno = [200, 499]) && var(4)
-trigger3 = ((stateno = [2000, 2050]) || (stateno = [2100, 2150]) || stateno = 2205) && var(4)
-trigger4 = stateno = 52 && var(8) > 1
+trigger2 = movetype = A && (var(4) = [1, 2])
+trigger3 = stateno = 52 && var(8) > 1
 value = 1000
 
 ;enhaunce
@@ -1574,9 +1599,8 @@ triggerall = roundstate = 2
 triggerall = statetype != A
 triggerall = command = "22x" || command = "22y" || command = "22z"
 trigger1 = ctrl
-trigger2 = (stateno = [200, 499]) && var(4)
-trigger3 = ((stateno = [2000, 2050]) || (stateno = [2100, 2150]) || stateno = 2205) && var(4)
-trigger4 = stateno = 52 && var(8) > 1
+trigger2 = movetype = A && (var(4) = [1, 2])
+trigger3 = stateno = 52 && var(8) > 1
 value = 1100
 
 ;==============================================================================
@@ -1609,7 +1633,19 @@ triggerall = command = "holdfwd"
 triggerall = (command = "x" && command = "y") || (command = "b")
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = (stateno = [200, 499]) && var(4)
+trigger2 = movetype = A && (var(4) = 1)
+trigger3 = stateno = 710 && var(4) = 8
+trigger3 = power >= 500
+
+[State -1, break]
+type = ChangeState
+value = 710
+triggerall = !AILevel
+triggerall = command = "holdback"
+triggerall = (command = "x" && command = "y") || (command = "b")
+triggerall = statetype != A
+trigger1 = ctrl
+trigger2 = movetype = A && (var(4) = 1)
 
 ;5S
 [State -1, 1200]
@@ -1620,7 +1656,7 @@ triggerall = statetype != A
 triggerall = command = "b"
 triggerall = command != "holddown"
 trigger1 = ctrl
-trigger2 = (stateno = [200, 499]) && var(4)
+trigger2 = movetype = A && (var(4) = 1)
 value = 2000
 
 ;2S
@@ -1632,7 +1668,7 @@ triggerall = statetype != A
 triggerall = command = "b"
 triggerall = command = "holddown"
 trigger1 = ctrl
-trigger2 = (stateno = [200, 499]) && var(4)
+trigger2 = movetype = A && (var(4) = 1)
 value = 2100
 
 ;JS
@@ -1644,7 +1680,7 @@ triggerall = statetype = A
 triggerall = command = "b"
 trigger1 = ctrl
 trigger2 = !var(8)
-trigger2 = (stateno = [600, 699]) && var(4)
+trigger2 = movetype = A && (var(4) = 1)
 trigger3 = stateno = 1230 && animelemtime(3) >= 5
 value = 2200
 
@@ -1808,7 +1844,7 @@ trigger2 = command = "y"
 trigger2 = var(8) = 0
 trigger2 = stateno = 600 && var(4)
 trigger3 = (command = "y" || command = "holdy") || ((command = "x" || command = "holdx") && stateno = 700)
-trigger3 = stateno = 700 && time >= 20
+trigger3 = stateno = 700 && time >= 17
 trigger4 = command = "y"
 trigger4 = stateno = 1230 && animelemtime(3) >= 5
 
@@ -1823,7 +1859,7 @@ trigger2 = command = "z"
 trigger2 = var(8) = 0
 trigger2 = (stateno = [600,610]) && var(4)
 trigger3 = (command = "z" || command = "holdz")
-trigger3 = stateno = 700 && time >= 20
+trigger3 = stateno = 700 && time >= 17
 trigger4 = command = "z"
 trigger4 = stateno = 1230 && animelemtime(3) >= 5
 
