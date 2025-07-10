@@ -90,6 +90,7 @@ var(12) = 1
 ;ヒット数カウント
 [State -2,ヒット数]
 type = VarAdd
+triggerall = !((stateno=[600,620]) && var(8) = 2)
 triggerall = !(stateno=[800,810])
 triggerall = !(stateno=2050 || stateno=2150)
 triggerall = !(stateno=[3000,3499])
@@ -100,7 +101,7 @@ var(13) = 1
 [State -2,ヒット数]
 type = VarAdd
 triggerall = movehit = 1
-trigger1 = var(8)
+trigger1 = var(8) = 1
 var(13) = 2
 [State -2,ヒット数]
 type = VarAdd
@@ -135,6 +136,12 @@ fVar(10) = 0.5
 
 [State -2,アサルトフラグ]
 type = varset
+trigger1 = var(8) > 0
+trigger1 = movehit = 1
+var(8) = 10
+
+[State -2,アサルトフラグ]
+type = varset
 trigger1 = (statetype != A && stateno != 52 && stateno != 700)
 trigger2 = movetype = H
 var(8) = 0
@@ -149,36 +156,6 @@ type = AfterImageTime
 trigger1 = var(8) && stateno = [600, 620]
 trigger1 = MoveContact = 1
 time = 0
-ignorehitpause = 1
-
-[State 200, vo]
-type = PlaySnd
-trigger1 = var(8) = 1
-trigger1 = MoveHit = 1
-trigger1 = P2StateType = C
-value = 700, 10+random%2
-channel = 0
-ignorehitpause = 1
-
-[State 200, vo]
-type = PlaySnd
-trigger1 = var(8) = 1
-trigger1 = MoveGuarded = 1
-value = 700, 20+random%2
-channel = 0
-ignorehitpause = 1
-
-[State 200, cont]
-type = VarAdd
-trigger1 = var(8) > 0
-trigger1 = MoveHit
-var(8) = 1
-ignorehitpause = 1
-[State 200, cont]
-type = VarSet
-trigger1 = var(8) > 0
-trigger1 = MoveGuarded
-var(8) = -1
 ignorehitpause = 1
 
 [State -2,浮き補正]
@@ -204,10 +181,18 @@ id = 1350
 
 [State 0, end]
 type = removeexplod
-trigger1 = NumExplod(7001)
-trigger1 = stateno != [3000,3099]
+triggerall = NumExplod(7001)
+trigger1 = (stateno != [3000,3099]) && stateno != 700
 trigger2 = var(20) > 605
 id = 7001
+
+[State 0, end]
+type = removeexplod
+triggerall = NumExplod(7700)
+trigger1 = movecontact
+trigger2 = !var(8)
+id = 7700
+ignorehitpause = 1
 
 ;---------------------------------------------------------------------------
 [State -1, タッグ用生死判別];
@@ -230,8 +215,8 @@ IgnoreHitPause = 1
 [State -2, クリップボード]
 type     = DisplayToClipBoard
 trigger1 = 1
-text     = "power=%d, SpeEx=%d, hit=%d 20=%d uki=%f"
-params   = power, var(0), var(13), animelemtime(1), fvar(20)
+text     = "power=%d, SpeEx=%d, hit=%d assault=%d uki=%f"
+params   = power, var(0), var(13), var(8), fvar(20)
 IgnoreHitPause = 1
 
 [State -2, クリップボード]
@@ -276,7 +261,8 @@ id = 2200
 
 [State 200, キャンセルフラグ]
 type = VarSet
-trigger1 = movetype = A && time = 1
+trigger1 = movetype != A
+trigger2 = movetype = A && time = 1
 var(4) = 0
 ignorehitpause = 1
 

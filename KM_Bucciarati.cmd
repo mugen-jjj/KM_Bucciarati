@@ -412,10 +412,13 @@ trigger1 = !inguarddist
 trigger1 = p2bodydist x >= 70 || moveguarded
 trigger1 = (p2statetype != A || p2bodydist y > -80)
 trigger1 = p2stateno != [4400, 4500]
-trigger1 = random < 25 + (moveguarded = 1 || stateno = 2205)*60
+trigger1 = random < 35 + (moveguarded = 1 || stateno = 2205)*60
 ;combo
 trigger2 = movehit = 1
-trigger2 = stateno = 2000 && fvar(20) < 3
+trigger2 = stateno = 2000 && !(var(1)&2**0)
+;break
+trigger2 = var(4) = 5
+trigger2 = stateno = 710
 trigger2 = !(var(1)&2**0)
 var(58) = 1210
 
@@ -429,7 +432,7 @@ trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
 trigger1 = !inguarddist
 trigger1 = p2bodydist x >= 70 || moveguarded
 trigger1 = backedgebodydist > 45
-trigger1 = random < 11 + (moveguarded = 1 || stateno = 2205)*70
+trigger1 = random < 8 + (moveguarded = 1 || stateno = 2205)*50
 var(58) = 1220
 
 [State -1, KM_mise]
@@ -442,7 +445,7 @@ trigger1 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
 trigger1 = !inguarddist
 trigger1 = p2bodydist x >= 70 || moveguarded
 trigger1 = enemynear(var(48)),backedgebodydist > 80
-trigger1 = random < 11 + (moveguarded = 1 || stateno = 2205)*70
+trigger1 = random < 8 + (moveguarded = 1 || stateno = 2205)*50
 var(58) = 1222
 
 [State -1, KM_shunshin]
@@ -471,13 +474,13 @@ trigger3 = var(58) := 1236
 ;コーラ
 trigger4 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
 trigger4 = p2bodydist x >= 70 || moveguarded
-trigger4 = random < 4 + (var(59) = 0) * 7 + (moveguarded = 1 || stateno = 2205)*10 - (var(59) = 1)*10
+trigger4 = random < 4 + (moveguarded = 1 || stateno = 2205)*10 - (var(59) = 1)*10
 trigger4 = var(58) := 1232
 ;コーラ(近くで)
 trigger5 = var(59) = 0
 trigger5 = (var(21)) || ((var(4) = [1, 2]) && moveguarded = 1 || stateno = 2205)
 trigger5 = p2bodydist x >= 70 || moveguarded
-trigger5 = random < 4 + (var(59) = 0) * 6 + (moveguarded = 1 || stateno = 2205)*10
+trigger5 = random < 4 + (moveguarded = 1 || stateno = 2205)*10
 trigger5 = var(58) := 1237
 
 [State -1, KM_zipperA]
@@ -527,11 +530,11 @@ triggerall = statetype != A
 
 triggerall = var(58) = 0
 triggerall = (p2statetype != L)
-trigger1 = var(21) || ((var(4) = 1) && moveguarded = 1)
+trigger1 = var(21) || ((var(4) = [1, 3]) && moveguarded = 1)
 trigger1 = (p2statetype != A || p2bodydist y > -90)
 trigger1 = p2bodydist x < 180
 trigger1 = !(inguarddist && p2bodydist x < 55)
-trigger1 = random < 28 + (var(1)&2**0)* 15 + (p2bodydist x = [85, 130])*10 - (inguarddist)* 30
+trigger1 = random < 33 + (var(1)&2**0)* 23 + (p2bodydist x = [85, 130])*10 - (inguarddist)* 30
 ;繋ぎ
 trigger2 = stateno=220 || stateno=420
 trigger2 = movecontact = 1
@@ -580,10 +583,24 @@ triggerall = statetype != A
 triggerall = p2statetype != L
 
 triggerall = var(58) = 0
-trigger1 = (var(21)) || ((var(4) = 1) && moveguarded = 1)
+trigger1 = (var(21)) || ((var(4) = [1, 3]) && moveguarded = 1)
 trigger1 = (p2statetype != A)
 trigger1 = p2bodydist x = [-5, 140]
 trigger1 = random < 15 + (p2bodydist x = [60, 140]) * 5 + (var(59)=0) * 9 + (moveguarded = 1)*70
+
+[State -1, break]
+type = ChangeState
+value = 710
+triggerall = AILevel && RoundState = 2
+triggerall = statetype != A
+triggerall = p2statetype != L
+
+triggerall = var(58) = 0
+trigger1 = (var(21)) || ((var(4) = [1, 3]) && moveguarded = 1)
+trigger1 = (p2statetype != A)
+trigger1 = !inguarddist
+trigger1 = p2bodydist x = [-5, 80]
+trigger1 = random < 15 + (power >= 1000)* 34 + (moveguarded = 1)*100
 
 ;投げ
 [State -1, 1000]
@@ -909,7 +926,7 @@ triggerall = var(58) = [1210, 1299]
 trigger1 = var(21)
 trigger2 = (stateno = [200, 499]) && var(4)
 trigger3 = ((stateno = [2000, 2050]) || (stateno = [2100, 2150]) || stateno = 2205) && var(4)
-trigger4 = stateno = 52 && var(8) > 1
+trigger4 = stateno = 52 && var(8) >= 10
 value = 1200
 
 [State 200, leave]
@@ -1465,13 +1482,13 @@ Trigger1 = Enemynear(var(48)),Pos Y+Enemynear(var(48)),Vel Y * 8 + fvar(30) * 8 
 trigger1 = 1||var(58) := 0
 
 ;---------------------------------------------------------------------------
-;こいつ ＞
+;こいつ or カーズ ＞
 [state -1, set]
 type = Null
 triggerall = AILevel && RoundState = 2
 triggerall = (var(58) = [0, 10000))
 
-triggerall = (stateno = 1210 && var(4)) || (stateno = 2000 && fvar(20) < 5)
+triggerall = (stateno = 1210 && var(4)) || (stateno = 2000 && !(var(1)&2**0) && fvar(20) < 5)
 triggerall = movehit = 1
 trigger1 = enemynear(var(48)),backedgebodydist < 30 && p2bodydist x < 60
 trigger1 = var(58) :=  IfElse(power > 3000, 13000, IfElse((power=[1000, 2500])||p2life<200, 13100, 0))
@@ -1532,8 +1549,8 @@ triggerall = statetype != A
 triggerall = command = "c"
 triggerall = power >= 3000
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = [1, 3])
-trigger3 = stateno = 52 && var(8) > 1
+trigger2 = var(4) = [1, 10]
+trigger3 = stateno = 52 && var(8) >= 10
 value = 3000
 
 ;236h
@@ -1545,8 +1562,8 @@ triggerall = statetype != A
 triggerall = command = "236aa" || command = "236b"
 triggerall = power >= 1000
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = [1, 3])
-trigger3 = stateno = 52 && var(8) > 1
+trigger2 = var(4) = [1, 10]
+trigger3 = stateno = 52 && var(8) >= 10
 value = 3100
 
 ;214h
@@ -1559,8 +1576,8 @@ triggerall = command = "214aa" || command = "214b"
 triggerall = power >= 1000
 triggerall = numhelper(3250) = 0
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = [1, 3])
-trigger3 = stateno = 52 && var(8) > 1
+trigger2 = var(4) = [1, 10]
+trigger3 = stateno = 52 && var(8) >= 10
 value = 3200
 
 ;==============================================================================
@@ -1574,8 +1591,8 @@ triggerall = roundstate = 2
 triggerall = statetype != A
 triggerall = command = "41236x" || command = "41236y" || command = "41236z"
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = [1, 2])
-trigger3 = stateno = 52 && var(8) > 1
+trigger2 = (var(4) = [1, 5])
+trigger3 = stateno = 52 && var(8) >= 10
 value = 1200
 
 ;ude
@@ -1587,8 +1604,8 @@ triggerall = statetype != A
 triggerall = command = "214x" || command = "214y" || command = "214z"
 triggerall = NumHelper(1005) = 0
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = [1, 2])
-trigger3 = stateno = 52 && var(8) > 1
+trigger2 = (var(4) = [1, 5])
+trigger3 = stateno = 52 && var(8) >= 10
 value = 1000
 
 ;enhaunce
@@ -1599,8 +1616,8 @@ triggerall = roundstate = 2
 triggerall = statetype != A
 triggerall = command = "22x" || command = "22y" || command = "22z"
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = [1, 2])
-trigger3 = stateno = 52 && var(8) > 1
+trigger2 = (var(4) = [1, 5])
+trigger3 = stateno = 52 && var(8) >= 10
 value = 1100
 
 ;==============================================================================
@@ -1629,23 +1646,22 @@ trigger1 = command = "BB"
 type = ChangeState
 value = 700
 triggerall = !AILevel
+triggerall = (command = "x" && command = "y")
 triggerall = command = "holdfwd"
-triggerall = (command = "x" && command = "y") || (command = "b")
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = 1)
-trigger3 = stateno = 710 && var(4) = 8
-trigger3 = power >= 500
+trigger2 = (var(4) = [1, 4])
+;チェインはdef 710から
 
 [State -1, break]
 type = ChangeState
 value = 710
 triggerall = !AILevel
+triggerall = (command = "x" && command = "y")
 triggerall = command = "holdback"
-triggerall = (command = "x" && command = "y") || (command = "b")
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = 1)
+trigger2 = (var(4) = [1, 4])
 
 ;5S
 [State -1, 1200]
@@ -1656,7 +1672,7 @@ triggerall = statetype != A
 triggerall = command = "b"
 triggerall = command != "holddown"
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = 1)
+trigger2 = (var(4) = [1, 4])
 value = 2000
 
 ;2S
@@ -1668,7 +1684,7 @@ triggerall = statetype != A
 triggerall = command = "b"
 triggerall = command = "holddown"
 trigger1 = ctrl
-trigger2 = movetype = A && (var(4) = 1)
+trigger2 = (var(4) = [1, 4])
 value = 2100
 
 ;JS
@@ -1680,7 +1696,7 @@ triggerall = statetype = A
 triggerall = command = "b"
 trigger1 = ctrl
 trigger2 = !var(8)
-trigger2 = movetype = A && (var(4) = 1)
+trigger2 = (var(4) = [1, 4])
 trigger3 = stateno = 1230 && animelemtime(3) >= 5
 value = 2200
 
@@ -1707,7 +1723,7 @@ triggerall = command = "holdfwd"
 triggerall = command != "holddown"
 triggerall = command = "a"
 triggerall = power >= 1000
-trigger1 = stateno = [150,153]
+trigger1 = stateno = 150 || stateno = 151
 trigger1 = time > 0
 value = 720
 
@@ -1746,8 +1762,7 @@ triggerall = command = "y"
 triggerall = command = "holdfwd"
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = stateno != 215
-trigger2 = (stateno = [200, 499]) && var(4)
+trigger2 = var(4) = [1, 3]
 
 [State -1, j2c]
 type = ChangeState
@@ -1757,8 +1772,7 @@ triggerall = command = "y"
 triggerall = command = "holddown"
 triggerall = statetype = A
 trigger1 = ctrl
-trigger2 = var(8) = 0
-trigger2 = (stateno = [600,620]) && var(4)
+trigger2 = var(4) = [1, 3]
 trigger3 = stateno = 1230 && animelemtime(3) >= 5
 
 ;==============================================================================
@@ -1772,7 +1786,7 @@ triggerall = command = "x"
 triggerall = command != "holddown"
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = (stateno = 200 || stateno = 400) && var(4)
+trigger2 = var(4) = 1
 
 [State -1, b]
 type = ChangeState
@@ -1782,7 +1796,7 @@ triggerall = command = "y"
 triggerall = command != "holddown"
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = (stateno = 200 || stateno = 400) && var(4)
+trigger2 = var(4) = 1
 
 [State -1, c]
 type = ChangeState
@@ -1792,7 +1806,7 @@ triggerall = command = "z"
 triggerall = command != "holddown"
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = (stateno = 200 || stateno = 210 || stateno = 400 || stateno = 410) && var(4)
+trigger2 = var(4) = [1, 2]
 
 [State -1, 2a]
 type = ChangeState
@@ -1802,7 +1816,7 @@ triggerall = command = "x"
 triggerall = command = "holddown"
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = (stateno = 200||stateno = 400) && var(4)
+trigger2 = var(4) = 1
 
 [State -1, 2b]
 type = ChangeState
@@ -1812,7 +1826,7 @@ triggerall = command = "y"
 triggerall = command = "holddown"
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = (stateno = 200 || stateno = 400) && var(4)
+trigger2 = var(4) = 1
 
 [State -1, 2c]
 type = ChangeState
@@ -1822,7 +1836,7 @@ triggerall = command = "z"
 triggerall = command = "holddown"
 triggerall = statetype != A
 trigger1 = ctrl
-trigger2 = (stateno = 200 || stateno = 210 || stateno = 400 || stateno = 410) && var(4)
+trigger2 = var(4) = [1, 2]
 
 [State -1, ジャンプa]
 type = ChangeState
@@ -1842,7 +1856,7 @@ trigger1 = command = "y"
 trigger1 = ctrl
 trigger2 = command = "y"
 trigger2 = var(8) = 0
-trigger2 = stateno = 600 && var(4)
+trigger2 = var(4) = 1
 trigger3 = (command = "y" || command = "holdy") || ((command = "x" || command = "holdx") && stateno = 700)
 trigger3 = stateno = 700 && time >= 17
 trigger4 = command = "y"
@@ -1857,7 +1871,7 @@ trigger1 = command = "z"
 trigger1 = ctrl
 trigger2 = command = "z"
 trigger2 = var(8) = 0
-trigger2 = (stateno = [600,610]) && var(4)
+trigger2 = var(4) = [1, 2]
 trigger3 = (command = "z" || command = "holdz")
 trigger3 = stateno = 700 && time >= 17
 trigger4 = command = "z"
