@@ -3481,7 +3481,7 @@ sprpriority = 2
 type = VarSet
 triggerall = movecontact
 trigger1 = AnimElemTime(2) >= 0
-var(4) = 1
+var(4) = 4
 IgnoreHitPause = 1
 
 [State 10000, vel]
