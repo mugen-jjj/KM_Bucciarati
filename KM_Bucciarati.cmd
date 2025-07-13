@@ -1549,6 +1549,7 @@ triggerall = statetype != A
 triggerall = command = "c"
 triggerall = power >= 3000
 trigger1 = ctrl
+trigger2 = stateno != [3000, 3999]
 trigger2 = var(4) = [1, 10]
 trigger3 = stateno = 52 && var(8) >= 10
 value = 3000
@@ -1562,6 +1563,7 @@ triggerall = statetype != A
 triggerall = command = "236aa" || command = "236b"
 triggerall = power >= 1000
 trigger1 = ctrl
+trigger2 = stateno != [3000, 3999]
 trigger2 = var(4) = [1, 10]
 trigger3 = stateno = 52 && var(8) >= 10
 value = 3100
@@ -1576,6 +1578,7 @@ triggerall = command = "214aa" || command = "214b"
 triggerall = power >= 1000
 triggerall = numhelper(3250) = 0
 trigger1 = ctrl
+trigger2 = stateno != [3000, 3999]
 trigger2 = var(4) = [1, 10]
 trigger3 = stateno = 52 && var(8) >= 10
 value = 3200

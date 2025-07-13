@@ -4844,9 +4844,9 @@ type = HitDef
 trigger1 = 1
 attr = S, SP
 animtype = medium
-damage = ceil(61*root,fVar(10))
+damage = ceil(61*root,fVar(10)), ceil(61*0.2*root,fVar(10))
 guardflag = MA
-pausetime = 10,10
+pausetime = 0,10
 sparkno = s6001
 guard.sparkno = s6040
 sparkxy = 20,0
@@ -4858,9 +4858,9 @@ ground.slidetime = 15
 ground.hittime = 15
 air.hittime = 15
 guard.ctrltime = 15
-guard.velocity = -4
-ground.velocity = -4
-air.velocity = -4,-3 + root,fvar(20)
+guard.velocity = -3.5
+ground.velocity = -3.5
+air.velocity = -3.5,-3 + root,fvar(20)
 airguard.velocity = -3,-2
 yaccel = 0.45
 getpower = 50,0
@@ -4872,6 +4872,29 @@ ground.cornerpush.veloff = 0
 air.cornerpush.veloff = 0
 id = stateno
 sprpriority = 3
+palfx.color = 150
+palfx.time = 40
+palfx.add = 128,24,0
+palfx.mul = 90,64,64
+palfx.sinadd = 90,90,90,4
+
+[State snd]
+type = PlaySnd
+trigger1 = movecontact = 1
+value = 2, 10
+
+[State 0, explod]
+type = explod
+trigger1 = movecontact = 1
+anim = 6060
+id = 6060
+facing = 1
+postype = p1
+pos = 0,0
+sprpriority = 3
+ownpal = 0
+removeongethit = 1
+Scale = 0.5, 0.5
 
 [State 200, init]
 type = ParentVarSet
