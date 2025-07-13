@@ -116,22 +116,15 @@ trigger1 = EnemyNear,MoveType != H
 trigger1 = NumTarget = 0
 var(13) = 0
 
-[State -2,投げ補正初期化]
-type = VarSet
-triggerall = var(14) != 0
-trigger1 = EnemyNear,MoveType != H
-trigger1 = NumTarget = 0
-var(14) = 0
-
 [State -2,コンボ補正3]
 type = VarSet
 trigger1 = 1
-fVar(10) = ifelse((1.0-(var(13)*0.05))*ifelse(var(14),.5,1)<=0,0.1,(1.0-(var(13)*0.05))*ifelse(var(14),.5,1))
+fVar(10) = ifelse((1.0-(var(13)*0.05))<=0,0.1,(1.0-(var(13)*0.05)))
 [State -2,コンボ補正3]
 type = VarSet
 triggerall = fvar(10) < 0.5
-trigger1 = (stateno=[3000,3499]) && (!var(14))
-;;;trigger2 = (stateno=2150) && (!var(14))
+trigger1 = (stateno=[3000,3499])
+;;;trigger2 = (stateno=2150)
 fVar(10) = 0.5
 
 [State -2,アサルトフラグ]
@@ -215,8 +208,8 @@ IgnoreHitPause = 1
 [State -2, クリップボード]
 type     = DisplayToClipBoard
 trigger1 = 1
-text     = "power=%d, SpeEx=%d, hit=%d assault=%d uki=%f"
-params   = power, var(0), var(13), var(8), fvar(20)
+text     = "power=%d, SpeEx=%d, hit=%d hosei=%d uki=%f"
+params   = power, var(0), var(13), fvar(10), fvar(20)
 IgnoreHitPause = 1
 
 [State -2, クリップボード]

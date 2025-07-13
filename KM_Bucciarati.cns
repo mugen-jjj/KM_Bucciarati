@@ -4409,11 +4409,6 @@ type = TargetState
 trigger1 = time = 80
 value = 821
 
-[State 800, hosei]
-type = Varset
-trigger1 = Time = 80
-var(14) = 1
-
 [State 0, asi]
 type = explod
 trigger1 = Time = 80
@@ -9458,15 +9453,6 @@ trigger3 = animelemtime(1) = 25
 trigger4 = animelemtime(2) = 0
 value = 20, 1
 
-[State -2,コンボ補正3]
-type = VarSet
-trigger1 = 1
-fVar(10) = ifelse((1.0-(root,var(13)*0.05))*ifelse(root,var(14),.5,1)<=0,0.1,(1.0-(root,var(13)*0.05))*ifelse(root,var(14),.5,1))
-[State -2,コンボ補正3]
-type = VarSet
-trigger1 = fvar(10) < 0.5
-fVar(10) = 0.5
-
 [State 1000, 1]
 type = Projectile
 trigger1 = animelemtime(1) = 4
@@ -9478,7 +9464,7 @@ ProjRemoveTime = 3
 ProjEdgeBound = 9999
 offset = 36, -64
 attr = S, HP
-damage = ceil(40*fVar(10)),ceil(40*.20*fVar(10))
+damage = ceil(40*root,fVar(10)),ceil(40*.20*root,fVar(10))
 animtype = Light
 guardflag = MA
 hitflag = MAF
@@ -9529,14 +9515,9 @@ ground.velocity = -2
 air.animtype = Back
 air.velocity = -1.8, -4
 air.fall = 1
-fall.recover=0
+fall.recover = 0
 getpower = 0,0
 givepower = 15,0
-
-[State -2,ヒット数]
-type = ParentVarAdd
-trigger1 = movehit = 1 || projhit = 1
-var(13) = 1
 
 [State 1000, end]
 type = ChangeState
