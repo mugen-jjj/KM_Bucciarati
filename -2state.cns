@@ -124,7 +124,6 @@ fVar(10) = ifelse((1.0-(var(13)*0.05))<=0,0.1,(1.0-(var(13)*0.05)))
 type = VarSet
 triggerall = fvar(10) < 0.5
 trigger1 = (stateno=[3000,3499])
-;;;trigger2 = (stateno=2150)
 fVar(10) = 0.5
 
 [State -2,アサルトフラグ]

@@ -3786,7 +3786,7 @@ channel = 0
 [State 0, snd]
 type = playsnd
 trigger1 = !time
-value = 725,0
+value = 710, 5
 
 [State 200, se]
 type = PlaySnd
@@ -4183,7 +4183,7 @@ channel = 0
 [State 0, snd]
 type = playsnd
 trigger1 = !time
-value = 725,0
+value = 720, 5
 
 [State 0, super]
 type = pause

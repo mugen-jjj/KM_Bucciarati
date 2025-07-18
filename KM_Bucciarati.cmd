@@ -1538,7 +1538,7 @@ Trigger1 = 1
 
 ;CPU‚±‚±‚Ü‚Å
 ;==============================================================================
-; ’´•KE‹Z
+; Supers
 ;==============================================================================
 ;GHA
 [State -1, 1000]
@@ -1643,7 +1643,7 @@ triggerall = ctrl
 trigger1 = command = "BB"
 
 ;==============================================================================
-; S‹Z
+; Skills
 ;==============================================================================
 [State -1, assault]
 type = ChangeState
@@ -1726,7 +1726,7 @@ triggerall = command = "holdfwd"
 triggerall = command != "holddown"
 triggerall = command = "a"
 triggerall = power >= 1000
-trigger1 = stateno = 150 || stateno = 151
+trigger1 = stateno = [150, 153]
 trigger1 = time > 0
 value = 720
 
@@ -1775,11 +1775,12 @@ triggerall = command = "y"
 triggerall = command = "holddown"
 triggerall = statetype = A
 trigger1 = ctrl
+trigger2 = !var(8)
 trigger2 = var(4) = [1, 3]
 trigger3 = stateno = 1230 && animelemtime(3) >= 5
 
 ;==============================================================================
-; ’ÊíUŒ‚‹Z
+; normals
 ;==============================================================================
 [State -1, a]
 type = ChangeState
