@@ -3858,7 +3858,7 @@ priority = 7, Hit
 ground.type = High
 ground.slidetime = 40
 ground.hittime  = 40
-ground.velocity = -4
+ground.velocity = -11
 air.velocity = -2, -8
 airguard.velocity = IfElse(var(8) > 0, -11, -2.8), -2.2
 yaccel = 0.45
@@ -3876,9 +3876,11 @@ id = stateno
 type = TargetState
 triggerall = numtarget(StateNo)
 triggerall = target,statetype != A
+triggerall = target,stateno != 5950
 trigger1 = time > 1 && movehit = 1
 value = 5950
 id = StateNo
+IgnoreHitPause = 1
 
 [State 800]
 type = TargetState
@@ -3987,24 +3989,6 @@ trigger1 = MoveContact = 1
 time = 0
 ignorehitpause = 1
 
-[State -1, chain]
-type = ChangeState
-value = 700
-triggerall = AILevel
-triggerall = time > 0
-trigger1 = stateno = 710 && (var(4) = 5 || var(4) = 80)
-trigger1 = power >= 1000
-
-[State -1, chain]
-type = ChangeState
-value = 700
-triggerall = !AILevel
-triggerall = time > 0
-triggerall = (command = "x" && command = "y")
-triggerall = command = "holdfwd"
-trigger1 = stateno = 710 && (var(4) = 5 || var(4) = 80)
-trigger1 = power >= 1000
-
 [State 200, end]
 type = ChangeState
 trigger1 = AnimTime = 0
@@ -4018,22 +4002,62 @@ type = S
 movetype = H
 physics = N
 ctrl = 0
-velset = 0,0
 sprpriority = 1
 
-[State 0, pos]
-type = posadd
-trigger1 = 1
-x = 1*ifelse(time%2=0,-1,1)
+[State 5000, 1] ;Anim for HIT_LIGHT to HIT_HARD
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) != [3,5]
+value = ifelse((GetHitVar(groundtype) = 1),5000,5010) + GetHitVar(animtype)
 
-[State 200, anim]
-type = Changeanim
-trigger1 = 1
+[State 5000, 2] ;Anim for HIT_BACK
+type = ChangeAnim
+trigger1 = Time = 0
+trigger1 = GetHitVar(animtype) = [3,5]
+value = 5030
+
+[State 5000, 4] ;Freeze anim
+type = ChangeAnim
+trigger1 = Time > 0
 value = anim
+
+[State 5000, 5] ;State type gets set to aerial if getting hit up
+type = StateTypeSet
+trigger1 = Time = 0
+trigger1 = GetHitVar(yvel) != 0 || GetHitVar(fall)
+trigger2 = Pos Y != 0
+statetype = a
+
+[State 5000, FFB Light]
+type = ForceFeedback
+trigger1 = anim = 5000
+trigger2 = anim = 5010
+persistent = 0
+time = 6
+waveform = square
+
+[State 5000, FFB Medium]
+type = ForceFeedback
+trigger1 = anim = 5001
+trigger2 = anim = 5011
+persistent = 0
+time = 8
+waveform = sinesquare
+ampl = 110,-1,-.3
+
+[State 5000, FFB Hard]
+type = ForceFeedback
+trigger1 = anim = 5012
+trigger2 = anim = 5002
+trigger3 = anim = 5030
+persistent = 0
+time = 15
+waveform = sinesquare
+ampl = 140
 
 [State 0, end]
 type = changestate
-trigger1 = hitshakeover
+trigger1 = HitShakeOver
 value = 5951
 
 ;---------------------------------------------------------------------------
@@ -4041,23 +4065,27 @@ value = 5951
 [Statedef 5951]
 type = S
 movetype = H
-physics = N
+physics = S
 ctrl = 0
-velset = 0,0
 sprpriority = 1
+
+[State 5001, 1]
+type = HitVelSet
+trigger1 = Time = 0
+x = 1
 
 [State 200, anim]
 type = Changeanim
 trigger1 = Anim != 5950
 trigger1 = SelfAnimExist(5950)
-trigger1 = !alive || (AuthorName != "warusaki3" && AuthorName != "Phantom.of.the.Server")
+trigger1 = !alive || (AuthorName != "warusaki3" && AuthorName != "Phantom.of.the.Server" && AuthorName != "Gal129" && AuthorName != "rei")
 value = 5950
 
 [State 200, anim]
 type = Changeanim2
 triggerall = Anim != 5950
 trigger1 = !SelfAnimExist(5950)
-trigger2 = (AuthorName = "warusaki3" || AuthorName = "Phantom.of.the.Server")
+trigger2 = (AuthorName = "warusaki3" || AuthorName = "Phantom.of.the.Server" || AuthorName = "Gal129" || AuthorName = "rei")
 value = 5950
 
 [State 200, ステート変更]
@@ -4846,7 +4874,7 @@ attr = S, SP
 animtype = medium
 damage = ceil(61*root,fVar(10)), ceil(61*0.2*root,fVar(10))
 guardflag = MA
-pausetime = 0,10
+pausetime = 0, 11
 sparkno = s6001
 guard.sparkno = s6040
 sparkxy = 20,0
