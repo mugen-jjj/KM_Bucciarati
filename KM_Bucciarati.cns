@@ -3954,8 +3954,7 @@ fall = 0
 air.fall = 1
 fall.recover = 0
 down.bounce = 0
-ground.cornerpush.veloff = -4
-guard.CornerPush.VelOff = -30
+ground.CornerPush.VelOff = -30
 id = stateno
 
 [State 800]
