@@ -4952,6 +4952,30 @@ type = HitBy
 trigger1 = 1
 value = SCA,AP
 
+[State 0, end]
+type = varset
+trigger1 = movehit = 1
+var(46) = 1
+ignorehitpause = 1
+
+[State 0, end]
+type = parentvaradd
+trigger1 = var(46)
+var(13) = var(46)
+ignorehitpause = 1
+
+[State 0, end]
+type = poweradd
+trigger1 = var(46)
+value = 80
+ignorehitpause = 1
+
+[State 0, end]
+type = varset
+trigger1 = var(46)
+var(46) = 0
+ignorehitpause = 1
+
 [State 200, hit]
 type = HitDef
 trigger1 = 1
@@ -4976,7 +5000,7 @@ ground.velocity = -3.5
 air.velocity = -3.5,-3 + root,fvar(20)
 airguard.velocity = -3,-2
 yaccel = 0.45
-getpower = 50,0
+getpower = 0,0
 givepower = 25,0
 air.fall = 1
 fall = 0
