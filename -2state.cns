@@ -87,6 +87,12 @@ type = varset
 trigger1 = ctrl = 1
 var(12) = 1
 
+[State -2, power_limit]
+type = VarSet
+triggerall = var(5) = 0
+trigger1 = p2MoveType != H
+var(5) = 1
+
 ;ヒット数カウント
 [State -2,ヒット数]
 type = VarAdd
@@ -102,7 +108,7 @@ var(13) = 1
 type = VarAdd
 triggerall = movehit = 1
 trigger1 = var(8) = 1
-var(13) = 2
+var(13) = 3
 [State -2,ヒット数]
 type = VarAdd
 triggerall = movehit = 1
